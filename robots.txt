@@ -1,0 +1,28 @@
+# BN Soluções - robots.txt
+# Allow search engines to crawl all pages
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /cgi-bin/
+
+# Sitemap location
+Sitemap: https://bntelecomunicacoes.com.br/sitemap.xml
+
+# Specific directives for major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Crawl delay (in seconds) - adjust based on server capacity
+Crawl-delay: 1
+
+# Request rate (pages per second)
+Request-rate: 10/1s

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Homepage -->
+  <url>
+    <loc>https://bntelecomunicacoes.com.br/</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://bntelecomunicacoes.com.br/imagens/bnlogo.png</image:loc>
+      <image:title>Logo BN Soluções</image:title>
+    </image:image>
+  </url>
+  
+  <!-- NIO Page -->
+  <url>
+    <loc>https://bntelecomunicacoes.com.br/nio.html</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://bntelecomunicacoes.com.br/imagens/niologo.png</image:loc>
+      <image:title>Logo NIO</image:title>
+    </image:image>
+  </url>
+  
+  <!-- VERO Page -->
+  <url>
+    <loc>https://bntelecomunicacoes.com.br/vero.html</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://bntelecomunicacoes.com.br/imagens/verologo.png</image:loc>
+      <image:title>Logo VERO</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Algar Page -->
+  <url>
+    <loc>https://bntelecomunicacoes.com.br/algar.html</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://bntelecomunicacoes.com.br/imagens/algarlogo.png</image:loc>
+      <image:title>Logo Algar Telecom</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Sobre Page -->
+  <url>
+    <loc>https://bntelecomunicacoes.com.br/sobre.html</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Contato Page -->
+  <url>
+    <loc>https://bntelecomunicacoes.com.br/contato.html</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Cliente Page -->
+  <url>
+    <loc>https://bntelecomunicacoes.com.br/cliente.html</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>
