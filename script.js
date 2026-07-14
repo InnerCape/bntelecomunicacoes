@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!isPriorityImage && !img.hasAttribute('loading')) img.loading = 'lazy';
   });
 
+  // Logos do trust banner sao renderizados como wordmarks vetoriais em CSS.
+
   // ---- Ano dinâmico no rodapé ----
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -32,9 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuToggle = document.getElementById('menu-toggle');
   const mainNav = document.getElementById('main-nav');
   const headerCta = document.querySelector('.header-actions .btn-whatsapp');
+  const dropdownToggle = document.getElementById('dropdown-toggle');
 
   if (menuToggle && mainNav) {
     menuToggle.setAttribute('aria-controls', 'main-nav');
+    const MENU_ANIMATION_MS = 300;
+    let isMenuAnimating = false;
+    let menuAnimTimer = null;
 
     let navBackdrop = document.querySelector('.nav-backdrop');
     if (!navBackdrop) {
@@ -55,11 +61,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const setMenuState = (isOpen) => {
+      if (isMenuAnimating) return;
+      isMenuAnimating = true;
+      menuToggle.classList.add('is-animating');
+      clearTimeout(menuAnimTimer);
+
       mainNav.classList.toggle('open', isOpen);
       menuToggle.classList.toggle('active', isOpen);
       document.body.classList.toggle('menu-open', isOpen);
       menuToggle.setAttribute('aria-expanded', String(isOpen));
       navBackdrop.classList.toggle('open', isOpen);
+      if (!isOpen) {
+        mainNav.querySelectorAll('.nav-dropdown.open').forEach((dropdown) => {
+          dropdown.classList.remove('open');
+        });
+        if (dropdownToggle) dropdownToggle.setAttribute('aria-expanded', 'false');
+      }
+
+      menuAnimTimer = window.setTimeout(() => {
+        isMenuAnimating = false;
+        menuToggle.classList.remove('is-animating');
+      }, MENU_ANIMATION_MS);
     };
 
     const closeMenu = () => {
@@ -67,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     menuToggle.addEventListener('click', () => {
+      if (isMenuAnimating) return;
       setMenuState(!mainNav.classList.contains('open'));
     });
 
@@ -86,14 +109,26 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.key === 'Escape') closeMenu();
     });
 
+    let lastIsCompact = isCompactViewport();
     window.addEventListener('resize', () => {
-      if (!isCompactViewport()) closeMenu();
+      const nowIsCompact = isCompactViewport();
+      if (lastIsCompact && !nowIsCompact) closeMenu();
+      if (!nowIsCompact) {
+        clearTimeout(menuAnimTimer);
+        isMenuAnimating = false;
+        menuToggle.classList.remove('is-animating');
+        navBackdrop.classList.remove('open');
+        document.body.classList.remove('menu-open');
+        menuToggle.classList.remove('active');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        mainNav.classList.remove('open');
+      }
+      lastIsCompact = nowIsCompact;
     });
   }
 
   // ---- Dropdown "Operadoras" no menu ----
   const navDropdown = document.getElementById('nav-dropdown');
-  const dropdownToggle = document.getElementById('dropdown-toggle');
   if (navDropdown && dropdownToggle) {
     dropdownToggle.addEventListener('click', (e) => {
       e.stopPropagation();
