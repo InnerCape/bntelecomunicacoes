@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </p>
 
                     <a class="btn btn-whatsapp"
-                       href="https://wa.me/#WHATSAPP_AQUI"
+                       href="https://wa.me/5531983618918?text=Ol%C3%A1!%20Gostaria%20de%20verificar%20a%20disponibilidade%20de%20internet%20no%20meu%20endere%C3%A7o."
                        target="_blank">
                         Falar no WhatsApp
                     </a>

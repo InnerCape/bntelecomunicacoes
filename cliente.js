@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ---- Ações rápidas do painel -> WhatsApp com mensagem pronta ----
-  const whatsappNumber = '#WHATSAPP_AQUI';
+  const whatsappNumber = '5531983618918';
   const actionMessages = {
     suporte: 'Olá! Preciso de suporte técnico com a minha internet.',
     endereco: 'Olá! Preciso alterar o endereço de instalação da minha internet.',
@@ -154,7 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
     card.addEventListener('click', () => {
       const action = card.getAttribute('data-action');
       const nome = pendingCustomer ? pendingCustomer.nome.split(' ')[0] : '';
-      const msg = (nome ? `Olá! Aqui é ${nome}. ` : 'Olá! ') + (actionMessages[action] || 'Preciso de ajuda.');
+      const operadora = pendingCustomer && pendingCustomer.operadora ? pendingCustomer.operadora : '';
+      const plano = pendingCustomer && pendingCustomer.plano ? pendingCustomer.plano : '';
+      const planoContext = operadora || plano ? ` Meu plano atual é ${operadora}${operadora && plano ? ' ' : ''}${plano}.` : '';
+      const msg = (nome ? `Olá! Aqui é ${nome}. ` : 'Olá! ') + (actionMessages[action] || 'Preciso de ajuda.') + planoContext;
       window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
     });
   });

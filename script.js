@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---- Performance: lazy load imagens abaixo da dobra ----
   document.querySelectorAll('img').forEach((img) => {
     if (!img.hasAttribute('decoding')) img.decoding = 'async';
-    const isPriorityImage = img.closest('header, .hero, .page-hero, .op-hero, .operator-hero-shell, .hero-trust-banner');
+    const isPriorityImage = img.closest('header, .hero, .page-hero, .op-hero, .operator-hero-shell, .authorized-showcase');
     if (!isPriorityImage && !img.hasAttribute('loading')) img.loading = 'lazy';
   });
 
@@ -29,6 +29,203 @@ document.addEventListener('DOMContentLoaded', () => {
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
   }
+
+  // ---- WhatsApp links: mensagens contextuais por página/plano ----
+  const WHATSAPP_NUMBER = '5531983618918';
+  const path = (window.location.pathname || '').toLowerCase();
+
+  const getOperatorFromPath = () => {
+    if (path.endsWith('/vero.html') || path.endsWith('vero.html')) return 'VERO';
+    if (path.endsWith('/nio.html') || path.endsWith('nio.html')) return 'NIO';
+    if (path.endsWith('/algar.html') || path.endsWith('algar.html')) return 'ALGAR';
+    return '';
+  };
+
+  const getDefaultMessageByPage = () => {
+    const operator = getOperatorFromPath();
+    if (operator) return `Olá! Tenho interesse nos planos da ${operator} e gostaria de mais informações.`;
+    return 'Olá! Gostaria de mais informações sobre os planos de internet.';
+  };
+
+  const buildPlanMessage = (operator, planKey) => {
+    const planMessages = {
+      VERO: {
+        plan1: [
+          'Olá! Tenho interesse no plano VERO Wi-Fi 6.',
+          '',
+          '• Velocidade: 700 Mega',
+          '• Benefícios: Wi-Fi 6 incluso + E+, Navegue e Ubook GO',
+          '• Preço: R$ 124,99/mês',
+          '',
+          'Gostaria de mais informações sobre este plano.'
+        ].join('\n'),
+        plan2: [
+          'Olá! Tenho interesse no plano VERO Wi-Fi 6 + 20 GIGA.',
+          '',
+          '• Velocidade: 700 Mega (fibra) + 20 GIGA (móvel)',
+          '• Benefícios: Wi-Fi 6 incluso + E+, Navegue e AWDIO',
+          '• Preço: R$ 129,99/mês',
+          '',
+          'Gostaria de mais informações sobre este plano.'
+        ].join('\n'),
+        plan3: [
+          'Olá! Tenho interesse no plano VERO 800 Mega + Disney+.',
+          '',
+          '• Velocidade: 800 Mega + 30 GIGA (celular)',
+          '• Benefícios: Disney+ com anúncios incluso',
+          '• Preço: R$ 129,99/mês',
+          '',
+          'Gostaria de mais informações sobre este plano.'
+        ].join('\n')
+      },
+      NIO: {
+        plan1: [
+          'Olá! Tenho interesse no plano NIO Essencial.',
+          '',
+          '• Velocidade: 600 Mega',
+          '• Benefícios: Roteador Wi-Fi 5 incluso',
+          '• Preço: R$ 110,00/mês',
+          '',
+          'Gostaria de mais informações sobre este plano.'
+        ].join('\n'),
+        plan2: [
+          'Olá! Tenho interesse no plano NIO Super.',
+          '',
+          '• Velocidade: 800 Mega',
+          '• Benefícios: Wi-Fi 6 + Globoplay por 12 meses',
+          '• Preço: R$ 135,00/mês',
+          '',
+          'Gostaria de mais informações sobre este plano.'
+        ].join('\n'),
+        plan3: [
+          'Olá! Tenho interesse no plano NIO Ultra.',
+          '',
+          '• Velocidade: 1 Giga',
+          '• Benefícios: Wi-Fi 6 + Globoplay por 12 meses',
+          '• Preço: R$ 150,00/mês',
+          '',
+          'Gostaria de mais informações sobre este plano.'
+        ].join('\n')
+      },
+      ALGAR: {
+        plan1: [
+          'Olá! Tenho interesse no plano ALGAR 700 Mega.',
+          '',
+          '• Velocidade: 700 Mega',
+          '• Benefícios: Inner AI Lite Anual + Wi-Fi incluso + suporte 24h',
+          '• Preço: R$ 109,90/mês',
+          '',
+          'Gostaria de mais informações sobre este plano.'
+        ].join('\n'),
+        plan2: [
+          'Olá! Tenho interesse no plano ALGAR 800 Mega.',
+          '',
+          '• Velocidade: 800 Mega',
+          '• Benefícios: Inner AI Lite Anual + Wi-Fi incluso + suporte 24h',
+          '• Preço: R$ 119,90/mês',
+          '',
+          'Gostaria de mais informações sobre este plano.'
+        ].join('\n'),
+        plan3: [
+          'Olá! Tenho interesse no plano ALGAR 1 Giga.',
+          '',
+          '• Velocidade: 1 Giga',
+          '• Benefícios: Inner AI Lite Anual + Wi-Fi incluso + suporte 24h',
+          '• Preço: R$ 149,90/mês',
+          '',
+          'Gostaria de mais informações sobre este plano.'
+        ].join('\n')
+      }
+    };
+
+    if (!operator || !planKey) return '';
+    return planMessages[operator] && planMessages[operator][planKey]
+      ? planMessages[operator][planKey]
+      : '';
+  };
+
+  const setWhatsAppHref = (el, message) => {
+    if (!el || !message) return;
+    const encoded = encodeURIComponent(message);
+    el.setAttribute('href', `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`);
+  };
+
+  // Planos por operadora (cards das páginas de operadora)
+  const operatorFromPath = getOperatorFromPath();
+  if (operatorFromPath) {
+    const getPlanKeyByImage = (src, idx) => {
+      // NIO cards are intentionally arranged in custom visual order.
+      if (operatorFromPath === 'NIO') {
+        const nioOrder = ['plan3', 'plan1', 'plan2'];
+        return nioOrder[idx] || 'plan1';
+      }
+
+      // Algar cards are intentionally arranged in custom visual order.
+      if (operatorFromPath === 'ALGAR') {
+        const algarOrder = ['plan3', 'plan1', 'plan2'];
+        return algarOrder[idx] || 'plan1';
+      }
+      const normalized = (src || '').toLowerCase();
+      if (normalized.includes('plano2')) return 'plan2';
+      if (normalized.includes('plano3') || normalized.includes('avatar')) return 'plan3';
+      if (normalized.includes('plano')) return 'plan1';
+      if (idx === 1) return 'plan2';
+      if (idx === 2) return 'plan3';
+      return 'plan1';
+    };
+
+    const planCards = document.querySelectorAll('.operator-plan-gallery > div');
+    planCards.forEach((card, idx) => {
+      const btn = card.querySelector('.btn-whatsapp');
+      const img = card.querySelector('img');
+      if (!btn) return;
+      const planKey = getPlanKeyByImage(img ? img.getAttribute('src') : '', idx);
+      const message = buildPlanMessage(operatorFromPath, planKey);
+      if (message) setWhatsAppHref(btn, message);
+    });
+  }
+
+  // Todos os demais links WhatsApp recebem mensagens curtas e contextuais
+  const defaultMessage = getDefaultMessageByPage();
+  document.querySelectorAll('a[href*="wa.me/"]').forEach((link) => {
+    if (link.closest('.operator-plan-gallery')) return;
+
+    const label = (link.textContent || '').replace(/\s+/g, ' ').trim();
+    const lowerLabel = label.toLowerCase();
+    const operator = getOperatorFromPath();
+    const operatorMessage = operator
+      ? `Olá! Tenho interesse nos planos da ${operator} e gostaria de mais informações.`
+      : defaultMessage;
+    const coverageMessage = 'Olá! Gostaria de verificar a disponibilidade de internet no meu endereço.';
+
+    if (/verificar cobertura|verifique cobertura|disponibilidade/.test(lowerLabel)) {
+      setWhatsAppHref(link, coverageMessage);
+      return;
+    }
+
+    if (/consultar planos/.test(lowerLabel)) {
+      setWhatsAppHref(link, operatorMessage);
+      return;
+    }
+
+    if (link.classList.contains('float-whatsapp') || link.closest('header') || link.closest('footer')) {
+      setWhatsAppHref(link, operatorMessage);
+      return;
+    }
+
+    if (label) {
+      setWhatsAppHref(link, operatorMessage);
+      return;
+    }
+
+    setWhatsAppHref(link, defaultMessage);
+  });
+
+  // Link social com ícone no rodapé: mantém destino Instagram com acessibilidade
+  document.querySelectorAll('.footer-social-link').forEach((link) => {
+    link.setAttribute('aria-label', 'Instagram da BN Soluções');
+    link.setAttribute('title', 'Instagram da BN Soluções');
+  });
 
   // ---- Menu mobile ----
   const menuToggle = document.getElementById('menu-toggle');
@@ -319,7 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (contactForm) {
     setupFormValidation(contactForm);
 
-    const whatsappNumber = '#WHATSAPP_AQUI';
+    const whatsappNumber = WHATSAPP_NUMBER;
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
@@ -334,7 +531,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // All validations passed, send to WhatsApp
       const nome = contactForm.nome.value.trim();
       const telefone = contactForm.telefone.value.trim();
-      const cidade = contactForm.cidade.value.trim();
       const operadora = contactForm.operadora.value;
       const area = contactForm.area_cobertura ? contactForm.area_cobertura.value : '';
       const tipo = contactForm.tipo.value;
@@ -342,7 +538,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const linhas = [
         `Olá! Meu nome é ${nome}.`,
         `Telefone: ${telefone}`,
-        cidade ? `Cidade/Bairro: ${cidade}` : null,
         `Operadora de interesse: ${operadora}`,
         area ? `Área de cobertura: ${area}` : null,
         `Tipo de plano: ${tipo}`,
@@ -358,7 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (serviceForm) {
     setupFormValidation(serviceForm);
 
-    const whatsappNumber = '#WHATSAPP_AQUI';
+    const whatsappNumber = WHATSAPP_NUMBER;
     serviceForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
@@ -373,7 +568,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // All validations passed, send to WhatsApp
       const nome = serviceForm.nome.value.trim();
       const telefone = serviceForm.telefone.value.trim();
-      const cidade = serviceForm.cidade.value.trim();
       const endereco = serviceForm.endereco.value.trim();
       const operadora = serviceForm.operadora.value;
       const area = serviceForm.area_cobertura ? serviceForm.area_cobertura.value : '';
@@ -382,7 +576,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const linhas = [
         `Olá! Meu nome é ${nome}.`,
         `Telefone: ${telefone}`,
-        cidade ? `Cidade/Bairro: ${cidade}` : null,
         endereco ? `Endereço: ${endereco}` : null,
         `Operadora desejada: ${operadora}`,
         area ? `Área de cobertura: ${area}` : null,
