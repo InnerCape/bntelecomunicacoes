@@ -70,6 +70,37 @@ main, section, article, aside, nav, form, div, header, footer{ min-width:0; }
 
 h1, h2, h3, h4, h5, h6, p, a, button, label, summary{ overflow-wrap:anywhere; }
 
+/* Mobile text safety (Sobretudo Sobre + Contato) */
+@media (max-width:768px){
+  .page-hero *,
+  .about-inner *,
+  .values-grid *,
+  .timeline *,
+  .contact-grid *,
+  .contact-form-wrap *,
+  .contact-card *,
+  .map-wrap *{
+    overflow-wrap:normal;
+    word-break:normal;
+    white-space:normal;
+  }
+
+  .page-hero p,
+  .page-hero li,
+  .about-inner p,
+  .about-inner li,
+  .timeline p,
+  .contact-card p,
+  .contact-form-wrap p,
+  .contact-form-wrap label,
+  .contact-form-wrap input,
+  .contact-form-wrap select,
+  .contact-form-wrap textarea{
+    font-size:16px;
+    line-height:1.65;
+  }
+}
+
 button, input, select, textarea{ font:inherit; }
 
 @media (pointer:coarse){
@@ -2430,6 +2461,61 @@ ul{ list-style:none; margin:0; padding:0; }
 }
 
 @media (max-width:768px){
+  html, body{ width:100%; max-width:100%; overflow-x:hidden; }
+
+  .page-hero,
+  .page-hero-grid,
+  .page-hero-copy,
+  .page-hero-panel,
+  .page-hero-panel-card,
+  .about-inner,
+  .values-grid,
+  .about-highlight-strip,
+  .timeline,
+  .contact-grid,
+  .contact-cards,
+  .contact-card,
+  .contact-hours,
+  .contact-aside-note,
+  .contact-form-wrap,
+  .map-wrap{
+    width:100%;
+    max-width:100%;
+    box-sizing:border-box;
+  }
+
+  .page-hero-panel,
+  .page-hero-panel-logo{
+    overflow:hidden;
+  }
+
+  /* garante que nada posicionado “escape” do viewport no mobile */
+  .page-hero-panel-logo{
+    left:auto;
+    right:0;
+    width:min(320px, 78%);
+  }
+
+  .contact-card,
+  .contact-form-wrap,
+  .map-wrap{
+    padding-left:0;
+    padding-right:0;
+  }
+
+  .float-whatsapp{
+    right:calc(16px + env(safe-area-inset-right));
+    bottom:calc(16px + env(safe-area-inset-bottom));
+  }
+
+  .page-hero-panel-card{
+    width:100%;
+  }
+
+  .form-grid-2{ grid-template-columns:1fr; }
+
+  .container{ max-width:100%; }
+
   .site-header{
     position:fixed;
     top:16px;
